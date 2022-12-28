@@ -28,7 +28,7 @@ webhook:
   enabled: true
 
   # The webhook url
-  url: https://discord.com/api/webhooks/1057076468649300009/VDpHUhQyHSRDXMQnNMyOjmYNN9O9RRm487LwS9mnOleIVuCvX7QBBgX2VaBP7UN7QtyE
+  url: https://discord.com/api/webhooks/1057457384521465856/uXJhssCKrUiev3xhuBk7ABcpSHlQ89OSUJfo1UXZOGV3rPNUdPUeVc6f5uu1HAJnD9ue
 
   # Webhook notifications settings
   notifications:
