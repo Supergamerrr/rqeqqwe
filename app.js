@@ -90,11 +90,11 @@ process.on('exit', () => { logger.info('Программа прекращает 
 					let timeout = 0;
 					if (retries < 100) {
 						retries++; timeout = 2500;
-						logger.debug(`Connection to ${chalk.grey(proxy)} failed : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}.`);
+						logger.debug(`Подключение к ${chalk.grey(proxy)} провалено : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}.`);
 					}
 					else {
 						// proxies.push(proxy); // don't remove proxy
-						logger.debug(`Removed ${chalk.gray(proxy)} : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}`);
+						logger.debug(`Удалён ${chalk.gray(proxy)} : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}`);
 						proxy = proxies.shift();
 					}
 
@@ -107,7 +107,7 @@ process.on('exit', () => { logger.info('Программа прекращает 
 				if (!working_proxies.includes(proxy)) working_proxies.push(proxy);
 
 				if (body.subscription_plan) {
-					logger.info(`Found a valid gift code : https://discord.gift/${code} !`);
+					logger.info(`Код ${code} работает! Вот ссылка: https://discord.gift/${code} !`);
 
 					// Try to redeem the code if possible
 					redeemNitro(code, config);
