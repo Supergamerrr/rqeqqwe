@@ -155,7 +155,7 @@ process.on('exit', () => { logger.info('Программа прекращает 
 	};
 
 	const threads = config.threads > proxies.length ? proxies.length : config.threads;
-	logger.info(`Checking for codes using ${chalk.yellow(threads)} threads.`);
+	logger.info(`Проверяем коды используя ${chalk.yellow(threads)} потоков.`);
 
 	const working_proxies = [];
 	stats.startTime = +new Date();
@@ -176,7 +176,7 @@ process.on('exit', () => { logger.info('Программа прекращает 
 	setInterval(async () => {
 		// Close / restart program if all proxies used
 		if (stats.threads === 0) {
-			logger.info('Restarting using working_proxies.txt list.');
+			logger.info('Перезапускаем используя working_proxies.txt список.');
 			proxies = (readFileSync('./working_proxies.txt', 'UTF-8')).split(/\r?\n/).filter(p => p !== '');
 			if (!proxies[0]) {
 				logger.error('Закончились прокси.');
