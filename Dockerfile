@@ -4,6 +4,12 @@ WORKDIR app
 
 COPY . .
 
+HI
+HI
+HI
+HI
+HI
+
 RUN npm install
 
 CMD ["node", "."]

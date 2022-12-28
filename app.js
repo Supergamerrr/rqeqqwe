@@ -11,14 +11,6 @@ const
 const stats = { downloaded_codes: [], threads: 0, startTime: 0, used_codes: [], version: require('./package.json').version, working: 0 };
 
 console.clear();
-console.log(chalk.magenta(`
-__  _____________   __________
-_ \\/ /__    |__  | / /_  ____/
-__  /__/ /| |_   |/ /_  / __
-_/ / _/ ___ |/ /|  / / /_/ /
-/_/  /_/  |_/_/ |_/  \\____/
-       ${chalk.italic.gray(`v${stats.version} - by Tenclea`)}
-`));
 
 let config = yaml.load(readFileSync('./config.yml'));
 watchFile('./config.yml', () => {
@@ -60,7 +52,7 @@ process.on('exit', () => { logger.info('Программа прекращает 
 	if (config.proxies.enable_checker) proxies = await require('./utils/proxy-checker')(proxies, config.threads);
 	if (!proxies[0]) { logger.error('All of your proxies were filtered out by the proxy checker. Please add some fresh ones in the \'required\' folder.'); process.exit(1); }
 
-	logger.info(`Loaded ${chalk.yellow(proxies.length)} proxies.              `);
+	logger.info(`Загружено ${chalk.yellow(proxies.length)} прокси.              `);
 
 	const generateCode = () => {
 		const code = Array.apply(0, Array(16)).map(() => {
@@ -90,11 +82,11 @@ process.on('exit', () => { logger.info('Программа прекращает 
 					let timeout = 0;
 					if (retries < 100) {
 						retries++; timeout = 2500;
-						logger.debug(`Подключение к ${chalk.grey(proxy)} провалено : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}.`);
+						logger.debug(`Подключение к прокси ${chalk.grey(proxy)} провалено : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}.`);
 					}
 					else {
 						// proxies.push(proxy); // don't remove proxy
-						logger.debug(`Удалён ${chalk.gray(proxy)} : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}`);
+						logger.debug(`Удалён прокси ${chalk.gray(proxy)} : ${chalk.red(res?.statusCode || 'НЕТ ОТВЕТА')}`);
 						proxy = proxies.shift();
 					}
 
@@ -137,9 +129,9 @@ process.on('exit', () => { logger.info('Программа прекращает 
 					p = proxies.shift();
 				}
 				else if (body.message === 'Unknown Gift Code') {
-					logger.warn(`${code} was an invalid gift code.              `);
+					logger.warn(`Код ${code} недействительный.              `);
 				}
-				else { console.log(body?.message + ' - please report this on GitHub.'); }
+				else {' - Что-то пошло не так! Сообщите данную ошибку в GitHub.' + console.log(body?.message); }
 				logStats();
 				return setTimeout(() => { checkCode(generateCode(), p); }, p === proxy ? (body.retry_after * 1000 || 1000) : 0);
 			});
@@ -149,8 +141,8 @@ process.on('exit', () => { logger.info('Программа прекращает 
 		// Update title and write stats to stdout
 		const attempts = stats.used_codes.length;
 		const aps = attempts / ((+new Date() - stats.startTime) / 1000) * 60 || 0;
-		process.stdout.write(`Proxies: ${chalk.yellow(proxies.length + stats.threads)} | Attempts: ${chalk.yellow(attempts)} (~${chalk.gray(aps.toFixed(0))}/min) | Working Codes: ${chalk.green(stats.working)}  \r`);
-		process.title = `YANG - by Tenclea | Proxies: ${proxies.length + stats.threads} | Attempts: ${attempts} (~${aps.toFixed(0)}/min) | Working Codes: ${stats.working}`;
+		//logger.info(`${startTime}`);
+		//process.title = `YANG - by Tenclea | Proxies: ${proxies.length + stats.threads} | Attempts: ${attempts} (~${aps.toFixed(0)}/min) | Working Codes: ${stats.working}`;
 		return;
 	};
 
@@ -168,7 +160,7 @@ process.on('exit', () => { logger.info('Программа прекращает 
 			continue;
 		}
 
-		logger.debug(`Successfully started ${chalk.yellow(t)} threads.`);
+		logger.debug(`Успешно запущено ${chalk.yellow(t)} потоков.`);
 	};
 
 	startThreads(threads);
@@ -216,7 +208,7 @@ process.on('exit', () => { logger.info('Программа прекращает 
 		setInterval(async () => {
 			const attempts = stats.used_codes.length;
 			const aps = attempts / ((+new Date() - stats.startTime) / 1000) * 60 || 0;
-			sendWebhook(config.webhook.url, `Количество прокси: \`${proxies.length + stats.threads}\` | Попыток: \`${attempts}\` (~\`${aps.toFixed(1)}\`/min) | Рабочих кодов: \`${stats.working}\``);
+			sendWebhook(config.webhook.url, `Количество прокси: \`${proxies.length + stats.threads}\` | Попыток: \`${attempts}\` (~\`${aps.toFixed(1)}\`/мин) | Время работы: \`${ms(+new Date() - stats.startTime, { long: true })}\` | Рабочих кодов: \`${stats.working}\``);
 			return;
 		}, config.webhook.notifications.status_update_interval * 1000);
 	}
